@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <!-- Link CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/login_page.css">
+</head>
+
+<body>
+  <form class="login-form" action="/login" method="post">
+    <div>
+      <h2>Login</h2>
+      <label for="email">Email:</label>
+      <input type="text" name="Email" id="email" placeholder="example@gmail.com">
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" placeholder="Your password">
+    </div>
+    <div>
+      <button type="submit">Submit</button>
+    </div>
+    <div>
+      <p>New User?<a href="/register"> Register Here</a> </p>
+    </div>
+    <div class="error-message" id="error-message"></div>
+  </form>
+</body>
+
+</html>

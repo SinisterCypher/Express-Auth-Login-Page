@@ -1,0 +1,70 @@
+body {
+    background-color: #262424;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.register-form {
+    width: 300px;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+}
+
+.register-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.register-form input[type="text"],
+.register-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.register-form button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    background-color: #5c5c5c;
+}
+
+.register-form .error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.register-form input[type="file"] {
+    display: none;
+}
+
+.register-form label[for="profile_img"] {
+    padding: 7px;
+    background-color: #5c5c5c;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    display: inline-block;
+    margin-bottom:20px;
+
+}
+
+.register-form label[for="profile_img"]:hover {
+    background-color: #4CAF50;
+}
+
+.profile-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

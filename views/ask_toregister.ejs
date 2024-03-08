@@ -1,0 +1,43 @@
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/register_page.css">
+</head>
+<body>
+    <form class="register-form" action="/register" method="post">
+        <div>
+            <h2>Sign Up</h2>
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" placeholder="Your name">
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" placeholder="example@gmail.com">
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Your password">
+        </div>
+        <div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password">
+        </div>
+    <div  class="profile-upload">
+        <label for="profile_img">Upload your profile:</label>
+        <input type="file" name="profile_img" id="profile_img">
+        <p id="file-name"></p>
+        <!-- <label for="profile_img">Choose file</label> -->
+    </div>
+        <div>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    <script>
+        document.getElementById('profile_img').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
+</body>
+
+</html>
