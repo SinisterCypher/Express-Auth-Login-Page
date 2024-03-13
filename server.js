@@ -1,106 +1,102 @@
-//Importing modules and dependencies 
-// Using import and export syntax in node
-import express, { json } from 'express';
-import morgan from 'morgan';
-import dotenv from 'dotenv'
-import expressEjsLayouts from 'express-ejs-layouts';
-import fs from 'fs';
-import path from 'path';
-import { Console } from 'console';
+// import essential module using import/export syntax in node 
 
-// Load .env file into process.env
-dotenv.config();
+import express from "express";
+import dotenv from 'dotenv'; 
+import flash from 'express-flash'
+import session from "express-session";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import bcrypt from 'bcrypt'; 
+import morgan from "morgan";
+import { initializePassport } from "./passport-config";
+// Calling dotenv.config () after importing doteve , this dotenv.config attaches our varibles in .env file in our process.env root
+dotenv.config()
+// initialize passport 
 
-const app = express()
-const PORT = process.env.PORT || 5050;
-// App Configuration 
-app.use(morgan('dev'));
-app.set("view engine", "ejs");
-app.use(express.static('public/'));
-// Express.urlencoded is an middleware that parse urlencoded data passed from the form into a json obejct 
-// It appends the urlencoded data after conversion to json in req.body 
-// if we have 
-app.use(express.urlencoded({ extended: true }))
-// Routes
+initializePassport(passport,(email)=>{return users.find(user=> user.email === email)}
+, (id)=>{return users.find(user => user.id === id)})
 
 let users = []
-let isAuthenticated = false;
+// App configuraiton 
 
-let loggedUser = {}
+const app = express()
+// Set ejs as view engine 
+app.set('view engine', 'ejs'); 
 
-app.get("/", (req, res) => {
-    res.render('index')
-})
+// Development environment 
+app.use(morgan('dev'))
 
-app.use('/signUp', (req, res, next) => {
-    const { username, email, password } = req.body;
-    if (username && email && password) {
-        req.data = req.body
-        next()
-        return;
-    }
-    res.send("We must need username, email and Password");
+// serving static files from public folder 
 
-})
-// When user hits POST /register
-app.post('/signUp', (req, res, next) => {
-    const newUser = req.data;
-    const data = fs.readFileSync(path.join('db', 'data.json'), 'utf8');
+app.use(express.static('public'))
 
-    const users = JSON.parse(data) || [];
-    console.log(users)
 
-    users.push(newUser);
 
-    fs.writeFileSync(path.join('db', 'data.json'), JSON.stringify(users))
-    res.redirect('/login')
+app.use(flash()); 
+app.use(session({
+    secret: process.env.secret, 
+    resave: false, 
+    saveUninitialized:false
+}))
 
-})
 
+app.use(passport.initialize()); 
+app.use(passport.session())
+
+passport.use(LocalStrategy); 
+// using express body parser to change json data into js obeject and append it to req body
+
+app.use(express.json()); 
+app.use(express.urlencoded({extended:true}))
 
 
 
 
-app.get('/register', (req, res) => {
-    res.render('ask_toregister');
+/// Routes 
+/// Home page GET Route 
+app.get('/', (req,res,next)=>{
+    res.render('index', {indexcss: './public/index.css' }) 
 
-})
+});
 
 
-app.get("/login", (req, res) => {
+
+app.post('/login',passport.authenticate(passport.Strategy('local'),{
+    successRedirect:'/welcome', 
+    failureRedirect:'/', 
+    failureFlash:true
+})); 
+app.get('/login', (req, res)=>{
     res.render('ask_login')
 })
+app.get('/register', (req, res)=>{
+    res.render('ask_toregister')
+})
 
-app.post('/login' ,(req,res,next)=>{
-    const {email, password} = req.body; 
-    console.log(req.body);
-    if(!email && !password){
-       return res.send("we need both email and password")
-    }
-    const data = fs.readFileSync(path.join('db', 'data.json') , 'utf-8')
-    const users = JSON.parse(data)
-    console.log(users);
-    const user = users.find((user)=>{
-        return user.email == email && user.password == password
+app.post('/signUp', async (req, res)=>{
+   try{
+    const hashedpassword = await bcrypt.hash(req.body.password, 10)
+    users.push({
+        id: Date.now().toString(),
+        name: req.body.username, 
+        email:req.body.email, 
+        password: hashedpassword
     })
-    console.log(user)
-    if(user){
-       isAuthenticated = true;
-       loggedUser = user;
-       res.redirect('/welcome'); 
-    }
+    console.log(users)  
+    res.redirect('/login') 
+
+   }
+   catch(err){
+    res.send(err)
+    // res.redirect('/register')
+   }
+
 })
 
 
-app.get('/welcome', (req,res)=>{
-    if(isAuthenticated){
-        const user = loggedUser;
-       return res.render("welcome",{user})
-    }
-   return res.status(401).send("you aren't allowed")
-})
 
-app.listen(PORT, () => {
-    console.log(`Server is Listening on ${PORT}`);
 
+const PORT= process.env.PORT
+app.listen(PORT,()=>{
+    console.log(`Server is listening on ${PORT}`)
 })
