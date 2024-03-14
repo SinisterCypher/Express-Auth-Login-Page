@@ -4,6 +4,7 @@
 import {Strategy as LocalStrategy}  from 'passport-local'
 import bcrypt from 'bcrypt'; 
 
+// Passport intilization function 
 
 export default function initialize(passport, getUserByEmail , getUserById){
     const authenticateUser = async(email, password, done)=>{
