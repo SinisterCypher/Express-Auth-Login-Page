@@ -78,6 +78,10 @@ app.get('/welcome', checkAuthenticated, (req, res)=>{
     res.render('welcome', {user})
     
 })
+
+app.get('/contact',(req,res)=>{
+    res.render('contactMe')
+})
 app.get('/login', checkNotAuthenticated, (req, res)=>{
     res.render('ask_login')
 })

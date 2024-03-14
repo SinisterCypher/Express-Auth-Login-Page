@@ -1,43 +1,81 @@
 <html>
+
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/register_page.css">
+
+    <script>
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            var errMsg = document.getElementById('errmsg');
+            if (password != confirmPassword) {
+                errMsg.style.color = '#FF0000'
+                errMsg.innerText = "Passwords do not match."
+                return false;
+            } else {
+                errMsg.style.color = '#008000';
+                errMsg.innerText = 'Password Match'
+                return true
+            }
+        }
+
+
+    </script>
+
 </head>
+
 <body>
-    <form class="register-form" action="/signUp" method="POST">
+    <form class="register-form" action="/signUp" method="POST" onsubmit="return validateForm()">
         <div>
             <h2>Sign Up</h2>
             <label for="username">Name:</label>
-            <input type="text" name="username" id="username" placeholder="Your name">
+            <input type="text" name="username" id="username" placeholder="Your name" required>
         </div>
         <div>
             <label for="email">Email:</label>
-            <input type="text" name="email" id="email" placeholder="example@gmail.com">
+            <input type="text" name="email" id="email" placeholder="example@gmail.com" required>
         </div>
-        <div>
+        <div style="position: relative;">
             <label for="password">Password:</label>
-            <input type="password" name="password" id="password" placeholder="Your password">
+            <input type="password" name="password" id="password" placeholder="Your password" required>
+            <img src="/show_password.png" alt="Show Password" id="togglePassword"
+                style="cursor: pointer; width: 20px; position: absolute; right: 10px; top: 60%; transform: translateY(-50%);">
         </div>
+
         <div>
+            <div id="errmsg" style="font-weight: bold; text-align: center;"> </div>
             <label for="confirmPassword">Confirm Password:</label>
-            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password">
+            <input type="password" name="confirmPassword" oninput="validateForm()" id="confirmPassword"
+                placeholder="Confirm your password" required>
         </div>
-    <div  class="profile-upload">
-        <label for="profile_img">Upload your profile:</label>
-        <input type="file" name="profile_img" id="profile_img">
-        <p id="file-name"></p>
-        <!-- <label for="profile_img">Choose file</label> -->
-    </div>
+        <div class="profile-upload">
+            <label for="profile_img">Upload your profile:</label>
+            <input type="file" name="profile_img" id="profile_img">
+            <p id="file-name"></p>
+            <!-- <label for="profile_img">Choose file</label> -->
+        </div>
         <div>
-            <button type="submit" >Sign Up</button>
+            <button type="submit">Sign Up</button>
         </div>
     </form>
     <script>
-        document.getElementById('profile_img').addEventListener('change', function(e) {
+        document.getElementById('profile_img').addEventListener('change', function (e) {
             var fileName = e.target.files[0].name;
             document.getElementById('file-name').textContent = fileName;
         });
     </script>
+    <script>
+        var togglePassword = document.getElementById("togglePassword");
+        var passwordField = document.getElementById("password");
+
+        togglePassword.addEventListener('click', () => {
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        });</script>
 </body>
 
 </html>
