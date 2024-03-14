@@ -9,7 +9,7 @@ export default function initialize(passport, getUserByEmail , getUserById){
     const authenticateUser = async(email, password, done)=>{
             const user = getUserByEmail(email) 
             if(!user) {
-                return done(null, false, {message: "no user with that email"}); 
+                return done(null, false, {message: `No user is associated with ${email}!`}); 
 
             }
             try{
@@ -17,7 +17,7 @@ export default function initialize(passport, getUserByEmail , getUserById){
                 {
                     return done(null, user)
                 } 
-                else{ return done(null, false, {message:"passsword incorrect"})
+                else{ return done(null, false, {message:"Passsword Incorrect!"})
                 }
             }
             catch(err){

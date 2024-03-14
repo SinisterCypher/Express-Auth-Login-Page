@@ -5,16 +5,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/login_page.css">
 </head>
-<% if(messages.error) {%>
-<%= messages.error %>
-<% } %>
+
 <body>
+
 
   <form class="login-form" action="/login" method="POST">
     <div>
       <h2>Login</h2>
+
       <label for="email">Email:</label>
       <input type="text" name="email" id="email" placeholder="example@gmail.com">
+      
+      <div class="error-message">
+        <% if(messages.error) {%>
+          <%= messages.error %>
+            <% } %>
+      </div>
+      
     </div>
     <div>
       <label for="password">Password:</label>
