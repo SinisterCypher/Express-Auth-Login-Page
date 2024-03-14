@@ -1,16 +1,15 @@
 
 // In this file we are going to store all the passport related methods 
-// to keep the code clean 
 
 import {Strategy as LocalStrategy}  from 'passport-local'
 import bcrypt from 'bcrypt'; 
 
 
-function initialize(passport, getUserByEmail , getUserById){
+export default function initialize(passport, getUserByEmail , getUserById){
     const authenticateUser = async(email, password, done)=>{
             const user = getUserByEmail(email) 
             if(!user) {
-                return done(null, false, {mesage: "no user with that email"}); 
+                return done(null, false, {message: "no user with that email"}); 
 
             }
             try{
@@ -38,5 +37,3 @@ function initialize(passport, getUserByEmail , getUserById){
             done(null, getUserById(id));  
     })
 }
-
-export {initialize} 

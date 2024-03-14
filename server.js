@@ -8,10 +8,12 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from 'bcrypt'; 
 import morgan from "morgan";
-import { initializePassport } from "./passport-config";
+import initialize from "./passport-config.js";
 // Calling dotenv.config () after importing doteve , this dotenv.config attaches our varibles in .env file in our process.env root
 dotenv.config()
-// initialize passport 
+// initialize passport  
+
+const initializePassport = initialize
 
 initializePassport(passport,(email)=>{return users.find(user=> user.email === email)}
 , (id)=>{return users.find(user => user.id === id)})
@@ -30,13 +32,14 @@ app.use(morgan('dev'))
 
 app.use(express.static('public'))
 
-
+import { MemoryStore as store } from "express-session";
 
 app.use(flash()); 
 app.use(session({
     secret: process.env.secret, 
     resave: false, 
-    saveUninitialized:false
+    saveUninitialized:false,
+    store: new store()
 }))
 
 
@@ -54,24 +57,36 @@ app.use(express.urlencoded({extended:true}))
 
 /// Routes 
 /// Home page GET Route 
-app.get('/', (req,res,next)=>{
+app.get('/', checkNotAuthenticated, (req,res,next)=>{
     res.render('index', {indexcss: './public/index.css' }) 
 
 });
 
 
 
-app.post('/login',passport.authenticate(passport.Strategy('local'),{
+app.post('/login',passport.authenticate('local',{
     successRedirect:'/welcome', 
-    failureRedirect:'/', 
+    failureRedirect:'/login', 
     failureFlash:true
 })); 
-app.get('/login', (req, res)=>{
+
+
+app.get('/welcome', checkAuthenticated, (req, res)=>{
+    console.log(req.user)
+    const user = req.user.name
+    // console.log(user)
+    res.render('welcome', {user})
+    
+})
+app.get('/login', checkNotAuthenticated, (req, res)=>{
     res.render('ask_login')
 })
-app.get('/register', (req, res)=>{
+
+app.get('/register', checkNotAuthenticated, (req, res)=>{
     res.render('ask_toregister')
 })
+
+
 
 app.post('/signUp', async (req, res)=>{
    try{
@@ -82,7 +97,6 @@ app.post('/signUp', async (req, res)=>{
         email:req.body.email, 
         password: hashedpassword
     })
-    console.log(users)  
     res.redirect('/login') 
 
    }
@@ -93,7 +107,26 @@ app.post('/signUp', async (req, res)=>{
 
 })
 
+app.get('/myprofile',checkAuthenticated, (req, res)=>{
+    const user = req.user; 
+    res.render('myprofile', {user})
 
+})
+
+function checkAuthenticated(req,res, next){
+    if(req.isAuthenticated()){
+        return next()
+    }
+    res.redirect('/login'); 
+}
+
+function checkNotAuthenticated (req,res, next){
+    if(req.isAuthenticated()){
+        return res.redirect('/welcome')
+
+    }
+    next()
+}
 
 
 const PORT= process.env.PORT

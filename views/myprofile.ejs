@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .profile {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .profile img {
+            width: 100%;
+            height: auto;
+        }
+        .profile h1, .profile p {
+            margin: 0 0 15px 0;
+        }
+ button {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            background-color: #008CBA; /* Blue background */
+            color: white; /* White text */
+            padding: 12px 24px; /* Some padding */
+            border: none; /* No border */
+            cursor: pointer; /* Mouse pointer on hover */
+            border-radius: 5px; /* Rounded corners */
+            text-decoration: none; /* No underline */
+        }
+
+        button:hover {
+            background-color: #007B9A; /* Darker blue on hover */
+        }
+
+       
+        
+ 
+   
+
+        
+    </style>
+</head>
+<body>
+    <div class="profile">        
+        <p><%= user.bio? user.bio: 'Let\'s go to Mars and Some some Weed ' %></p>
+        <img src="<%= user.pictureUrl? user.pictureUrl : 'https://images.fineartamerica.com/images/artworkimages/mediumlarge/3/elon-musk-smoking-weed-harold-doxey.jpg' %>" alt="Profile picture">
+        <h1><%= user.name %></h1>
+        <p><%= user.email %></p>
+    </div>
+
+         <a href="/welcome" role="button"> <button> Let's Go Back</button>  </a> 
+
+      
+
+</body>
+</html>
+
+    
